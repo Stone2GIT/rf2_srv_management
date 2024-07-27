@@ -34,31 +34,31 @@ $RF2USERDATA="$RF2ROOT\userdata"
 
 # getting cmdline arguments
 if ( $args[0] ) {
-    $PROFILES=$args
+    $PLRPROFILES=$args
  }
  else {
     # if no argument is given determine all profiles
-    $PROFILES=(gci $RF2USERDATA multiplayer.json -recurse | select -Expand Directory| select -Expand Name)
+    $PLRPROFILES=(gci $RF2USERDATA multiplayer.json -recurse | select -Expand Directory| select -Expand Name)
  }
 
 # check if we can find / read / modify multiplayer.json ...
 #if (Test-Path $RF2USER\multiplayer.json -PathType Leaf)
-if ($PROFILES)
+if ($PLRPROFILES)
 {
-    ForEach($PROFILE in $PROFILES)
+    ForEach($PLRPROFILE in $PLRPROFILES)
     {
-    $RF2USERDIR="$RF2USERDATA\$PROFILE"
-    $RF2UIPORT=(((gc $RF2USERDIR\$PROFILE.JSON)| select-string -Pattern "WebUI port""") -split ":")
+    $RF2USERDIR="$RF2USERDATA\$PLRPROFILE"
+    $RF2UIPORT=(((gc $RF2USERDIR\$PLRPROFILE.JSON)| select-string -Pattern "WebUI port""") -split ":")
     $RF2UIPORT=($RF2UIPORT[1] -replace ",",'')
     Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/rest/chat -Method POST -Body "Server shutdown in 1 minute"
     }
 
     Start-Sleep -Seconds 60
 
-    ForEach($PROFILE in $PROFILES)
+    ForEach($PLRPROFILE in $PLRPROFILES)
     {
-    $RF2USERDIR="$RF2USERDATA\$PROFILE"
-    $RF2UIPORT=(((gc $RF2USERDIR\$PROFILE.JSON)| select-string -Pattern "WebUI port""") -split ":")
+    $RF2USERDIR="$RF2USERDATA\$PLRPROFILE"
+    $RF2UIPORT=(((gc $RF2USERDIR\$PLRPROFILE.JSON)| select-string -Pattern "WebUI port""") -split ":")
     $RF2UIPORT=($RF2UIPORT[1] -replace ",",'')
     
     shutdown_server

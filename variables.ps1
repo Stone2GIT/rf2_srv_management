@@ -23,4 +23,4 @@ $CSVCONTENTFILE="$RF2ROOT\dlccontent.csv"
 
 # name of the profile to use (refer to $RF2ROOT\Userdata\<profile>)
 # note: can be given as argument on CLI where used in scripts
-$PROFILE="player"
+$PLRPROFILE="player"

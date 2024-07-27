@@ -13,15 +13,15 @@
 
 # variable definitions
 if ( $args[0] ) {
-    $PROFILE=$args[0]
+    $PLRPROFILE=$args[0]
  }
  else {
-    $PROFILE="player"
+    $PLRPROFILE="player"
  }
 
 
-    $RF2USERDATA="$RF2ROOT\USERDATA\$PROFILE"
-    $RF2UIPORT=(((gc $RF2USERDATA\$PROFILE.JSON)| select-string -Pattern "WebUI port""") -split ":")
+    $RF2USERDATA="$RF2ROOT\USERDATA\$PLRPROFILE"
+    $RF2UIPORT=(((gc $RF2USERDATA\$PLRPROFILE.JSON)| select-string -Pattern "WebUI port""") -split ":")
     $RF2UIPORT=($RF2UIPORT[1] -replace ",",'')
 
 function check4server {

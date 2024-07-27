@@ -22,13 +22,13 @@ function check4server {
 
 function start_server {
 
-    write-host "starting server with profile "$PROFILE
+    write-host "starting server with profile "$PLRPROFILE
 
     # specifying rfm file ... modname + version ... 
     # $ARGUMENTS=" +profile=player +rfm=dummy_10.rfm +oneclick"
 
     # as it might have run before we could try oneclick option ...
-    $ARGUMENTS=" +profile=$PROFILE +oneclick"
+    $ARGUMENTS=" +profile=$PLRPROFILE +oneclick"
     start-process -FilePath "bin64\rFactor2 Dedicated.exe" -ArgumentList $ARGUMENTS -NoNewWindow
     
 }
@@ -42,27 +42,27 @@ $RF2USERDATA="$RF2ROOT\userdata"
 
 # getting cmdline arguments
 if ( $args[0] ) {
-    $PROFILES=$args
+    $PLRPROFILES=$args
  }
  else {
     # if no argument is given determine all profiles
-    $PROFILES=(gci $RFUSERDATA multiplayer.json -recurse | select -Expand Directory| select -Expand Name)
+    $PLRPROFILES=(gci $RFUSERDATA multiplayer.json -recurse | select -Expand Directory| select -Expand Name)
  }
 
 
 
 # check if we can find / read / modify multiplayer.json ...
 #if (Test-Path $RF2USERDATA\multiplayer.json -PathType Leaf)
-if ($PROFILES)
+if ($PLRPROFILES)
 {
-    ForEach($PROFILE in $PROFILES)
+    ForEach($PLRPROFILE in $PLRPROFILES)
     {
-    $RF2USERDIR="$RF2USERDATA\$PROFILE"
-    $RF2UIPORT=(((gc $RF2USERDIR\$PROFILE.JSON)| select-string -Pattern "WebUI port""") -split ":")
+    $RF2USERDIR="$RF2USERDATA\$PLRPROFILE"
+    $RF2UIPORT=(((gc $RF2USERDIR\$PLRPROFILE.JSON)| select-string -Pattern "WebUI port""") -split ":")
     $RF2UIPORT=($RF2UIPORT[1] -replace ",",'')
     
     if ( $(Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/navigation/state -Method Get) ) {
-        write-host "Server with "$PROFILE" is already up" 
+        write-host "Server with "$PLRPROFILE" is already up" 
         }
     else {
         start_server
