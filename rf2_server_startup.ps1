@@ -1,5 +1,5 @@
 ﻿#
-# command line version of server shutdown for rFactor 2
+# command line version of server startup for rFactor 2
 #
 # 02/2024 Dietmar Stein, info@simracingjustfair.org
 #
