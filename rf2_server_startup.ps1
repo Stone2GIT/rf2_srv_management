@@ -1,5 +1,5 @@
 ﻿#
-# command line version of server startup for rFactor 2
+# command line version of server shutdown for rFactor 2
 #
 # 02/2024 Dietmar Stein, info@simracingjustfair.org
 #
@@ -15,20 +15,21 @@
 function check4server {
     do { 
         start-sleep -seconds 5
-        Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/navigation/state -Method Get
+        Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:$RF2UIPORT/navigation/state -Method Get
         $RESULT = $?
         } until ($RESULT)
 }
 
 function start_server {
 
-    write-host "starting server with profile "$PLRPROFILE
+    write-host "starting server with profile "$PROFILE
 
     # specifying rfm file ... modname + version ... 
     # $ARGUMENTS=" +profile=player +rfm=dummy_10.rfm +oneclick"
 
     # as it might have run before we could try oneclick option ...
-    $ARGUMENTS=" +profile=$PLRPROFILE +oneclick"
+#    $ARGUMENTS=" +profile=$PROFILE +oneclick +nowindow"
+    $ARGUMENTS=" +profile=$PROFILE +oneclick"
     start-process -FilePath "bin64\rFactor2 Dedicated.exe" -ArgumentList $ARGUMENTS -NoNewWindow
     
 }
@@ -42,32 +43,32 @@ $RF2USERDATA="$RF2ROOT\userdata"
 
 # getting cmdline arguments
 if ( $args[0] ) {
-    $PLRPROFILES=$args
+    $PROFILES=$args
  }
  else {
     # if no argument is given determine all profiles
-    $PLRPROFILES=(gci $RFUSERDATA multiplayer.json -recurse | select -Expand Directory| select -Expand Name)
+    $PROFILES=(gci $RFUSERDATA multiplayer.json -recurse | select -Expand Directory| select -Expand Name)
  }
 
 
 
 # check if we can find / read / modify multiplayer.json ...
 #if (Test-Path $RF2USERDATA\multiplayer.json -PathType Leaf)
-if ($PLRPROFILES)
+if ($PROFILES)
 {
-    ForEach($PLRPROFILE in $PLRPROFILES)
+    ForEach($PROFILE in $PROFILES)
     {
-    $RF2USERDIR="$RF2USERDATA\$PLRPROFILE"
-    $RF2UIPORT=(((gc $RF2USERDIR\$PLRPROFILE.JSON)| select-string -Pattern "WebUI port""") -split ":")
+    $RF2USERDIR="$RF2USERDATA\$PROFILE"
+    $RF2UIPORT=(((gc $RF2USERDIR\$PROFILE.JSON)| select-string -Pattern "WebUI port""") -split ":")
     $RF2UIPORT=($RF2UIPORT[1] -replace ",",'')
     
-    if ( $(Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/navigation/state -Method Get) ) {
-        write-host "Server with "$PLRPROFILE" is already up" 
+    if ( $(Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:$RF2UIPORT/navigation/state -Method Get) ) {
+        write-host "Server with "$PROFILE" is already up" 
         }
     else {
         start_server
         check4server 
-        Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/rest/chat -Method Post -Body "simracingjustfair.org - go fast, drive fair" 
+        Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:$RF2UIPORT/rest/chat -Method Post -Body "simracingjustfair.org - go fast, drive fair" 
         }
     }
 }
