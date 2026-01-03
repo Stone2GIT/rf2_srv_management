@@ -27,7 +27,7 @@ if ( $args[0] ) {
 function check4server {
     do { 
         start-sleep -seconds 15
-        Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/navigation/state -Method Get
+        Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:$RF2UIPORT/navigation/state -Method Get
         $RESULT = $?
         } until (!$RESULT)
 }
@@ -81,11 +81,11 @@ function start_server {
     
     do { 
         start-sleep -seconds 5
-        Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/navigation/state -Method Get
+        Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:$RF2UIPORT/navigation/state -Method Get
         $RESULT = $?
         } until ($RESULT)
 
-    Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/rest/chat -Method Post -Body "simracingjustfair.org - go fast, drive fair"
+    Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:$RF2UIPORT/rest/chat -Method Post -Body "simracingjustfair.org - go fast, drive fair"
 }
 
 function shutdown_server {
@@ -93,13 +93,13 @@ function shutdown_server {
     write-host "shutdown server in 1 minute"
 
     # sending message to server and players
-    if ((Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/rest/chat -Method POST -Body "Server shutdown in 1 minute"))
+    if ((Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:$RF2UIPORT/rest/chat -Method POST -Body "Server shutdown in 1 minute"))
     {
         Start-Sleep -Seconds 60
     }
 
     # shutdown the server (as we need to write to json files and they are opened while server is running), assuming default port
-    Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/navigation/action/NAV_EXIT -Method POST
+    Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:$RF2UIPORT/navigation/action/NAV_EXIT -Method POST
     
     # the server needs some time to go down ... and close the files
     check4server

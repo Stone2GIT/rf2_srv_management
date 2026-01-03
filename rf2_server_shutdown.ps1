@@ -16,13 +16,13 @@ function shutdown_server {
     write-host "shutdown server in 1 minute"
 
 #    # sending message to server and players
-#    if ((Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/rest/chat -Method POST -Body "Server shutdown in 1 minute"))
+#    if ((Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:$RF2UIPORT/rest/chat -Method POST -Body "Server shutdown in 1 minute"))
 #    {
 #        Start-Sleep -Seconds 60
 #    }
 
     # shutdown the server (as we need to write to json files and they are opened while server is running), assuming default port
-    Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/navigation/action/NAV_EXIT -Method POST
+    Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:$RF2UIPORT/navigation/action/NAV_EXIT -Method POST
 
 }
 
@@ -50,7 +50,7 @@ if ($PLRPROFILES)
     $RF2USERDIR="$RF2USERDATA\$PLRPROFILE"
     $RF2UIPORT=(((gc $RF2USERDIR\$PLRPROFILE.JSON)| select-string -Pattern "WebUI port""") -split ":")
     $RF2UIPORT=($RF2UIPORT[1] -replace ",",'')
-    Invoke-WebRequest -Uri http://127.0.0.1:$RF2UIPORT/rest/chat -Method POST -Body "Server shutdown in 1 minute"
+    Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:$RF2UIPORT/rest/chat -Method POST -Body "Server shutdown in 1 minute"
     }
 
     Start-Sleep -Seconds 60
