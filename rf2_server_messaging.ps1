@@ -44,6 +44,8 @@ while( 0 -ne 1 )
     $RF2UIPORT=5396
     $SWAGGERAPI = "http://127.0.0.1:$RF2UIPORT/rest/chat"
 
+    $SESSION = (Invoke-WebRequest -UseBasicParsing "http://127.0.0.1:$RF2UIPORT/rest/watch/sessionInfo"| ConvertFrom-Json).session
+
     if ($SESSION -notlike "*QUAL*" -or $SESSION -notlike "*RACE*") {
 #    pushLines -textArray $RF2CHAT.Where({$true}) -url $SWAGGERAPI
     Start-Job -InitializationScript $initScript -ScriptBlock {
@@ -67,6 +69,8 @@ while( 0 -ne 1 )
     $RF2UIPORT=5397
     $SWAGGERAPI = "http://127.0.0.1:$RF2UIPORT/rest/chat"
 
+    $SESSION = (Invoke-WebRequest -UseBasicParsing "http://127.0.0.1:$RF2UIPORT/rest/watch/sessionInfo"| ConvertFrom-Json).session
+
     if ($SESSION -notlike "*QUAL*" -or $SESSION -notlike "*RACE*") {
     #    pushLines -textArray $RF2CHAT.Where({$true}) -url $SWAGGERAPI
     Start-Job -InitializationScript $initScript -ScriptBlock {
@@ -75,5 +79,5 @@ while( 0 -ne 1 )
     } -ArgumentList ($RF2CHAT.Where({$true})), $SWAGGERAPI | Out-Null
     }
 
-    Start-Sleep -Seconds 60
+    Start-Sleep -Seconds 120
   }
