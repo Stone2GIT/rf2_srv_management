@@ -37,12 +37,12 @@ function change_configuration {
     # if test day mode is enabled switch to race mode and start session and we rely on the else :-/
     if ((gc $RF2USERDATA\Multiplayer.JSON) | select-string -Pattern """Test Day"":true")
     {
-    write-host "preparing race weekend"
+    write-host "preparing race weekend for server profile "$PLRPROFILE
     prepare4race
     }
     else
     {
-    write-host "preparing test day mode"
+    write-host "preparing test day mode for server profile "$PLRPROFILE
     prepare4testday
     }
 
@@ -69,13 +69,13 @@ function start_server {
 
     change_configuration
 
-    write-host "starting server"
+    write-host "starting server profile "$PLRPROFILE
 
     # specifying rfm file ... modname + version ... 
     # $ARGUMENTS=" +profile=player +rfm=dummy_10.rfm +oneclick"
 
     # as it might have run before we could try oneclick option ...
-    $ARGUMENTS=" +profile=player +oneclick"
+    $ARGUMENTS=" +profile=$PLRPROFILE +oneclick"
 
     start-process -FilePath "bin64\rFactor2 Dedicated.exe" -ArgumentList $ARGUMENTS -NoNewWindow
     
@@ -90,7 +90,7 @@ function start_server {
 
 function shutdown_server {
 
-    write-host "shutdown server in 1 minute"
+    write-host "shutdown $PLRPROFILE server in 1 minute"
 
     # sending message to server and players
     if ((Invoke-WebRequest -UseBasicParsing -Uri http://127.0.0.1:$RF2UIPORT/rest/chat -Method POST -Body "Server shutdown in 1 minute"))

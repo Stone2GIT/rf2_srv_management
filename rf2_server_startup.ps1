@@ -29,7 +29,7 @@ function start_server {
 
     # as it might have run before we could try oneclick option ...
 #    $ARGUMENTS=" +profile=$PROFILE +oneclick +nowindow"
-    $ARGUMENTS=" +profile=$PROFILE +oneclick"
+    $ARGUMENTS=" +profile=$PROFILE +trace=5 +traceflush +oneclick"
     start-process -FilePath "bin64\rFactor2 Dedicated.exe" -ArgumentList $ARGUMENTS -NoNewWindow
     
 }
@@ -44,9 +44,11 @@ $RF2USERDATA="$RF2ROOT\userdata"
 # getting cmdline arguments
 if ( $args[0] ) {
     $PROFILES=$args
+    write-host "Argument given: "$PROFILE
  }
  else {
     # if no argument is given determine all profiles
+    write-host "No argument given - looking for servers and starting them"
     $PROFILES=(gci $RFUSERDATA multiplayer.json -recurse | select -Expand Directory| select -Expand Name)
  }
 
